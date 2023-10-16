@@ -1,19 +1,20 @@
+
 - name: install prometheus 
   hosts: monitor
   become: true
   remote_user: root
   vars:
     ansible_ssh_private_key_file: /home/suman/.ssh/id_rsa
-  roles:
+  tags:
     - prometheus
 
 - name: install node-exporter
-  hosts: all
+  hosts: all 
   become: true
   remote_user: root
   vars:
     ansible_ssh_private_key_file: /home/suman/.ssh/id_rsa
-  roles:
+  tags:
     - node-exporter
 
 - name: install mysqld_exporter
@@ -22,7 +23,7 @@
   remote_user: root
   vars:
     ansible_ssh_private_key_file: /home/suman/.ssh/id_rsa
-  roles:
+  tags:
     - mysqld-exporter
 
 - name: install rabbitmq-exporter
@@ -31,7 +32,7 @@
   remote_user: root
   vars:
     ansible_ssh_private_key_file: /home/suman/.ssh/id_rsa
-  roles:
+  tags:
     - rabbitmq-exporter
     
 - name: install redis-exporter
@@ -40,5 +41,5 @@
   remote_user: root
   vars:
     ansible_ssh_private_key_file: /home/suman/.ssh/id_rsa
-  roles:
+  tags:
     - redis-exporter
