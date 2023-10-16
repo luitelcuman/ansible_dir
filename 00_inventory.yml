@@ -1,0 +1,24 @@
+all:
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+
+  children:
+    monitor:
+      hosts:
+        192.168.100.199: 
+
+    mysqld:
+      hosts:
+          192.168.100.222: 
+
+    rabbitmq:
+      hosts:
+        192.168.100.203:
+
+    redis:
+      hosts:
+        192.168.100.200:
+      
+    others:
+      hosts:
+      # 192.168.100.199:
