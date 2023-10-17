@@ -49,3 +49,5 @@
     ansible_ssh_private_key_file: /home/suman/.ssh/id_rsa
   tags:
     - redis-exporter
+  roles:
+    - redis-exporter

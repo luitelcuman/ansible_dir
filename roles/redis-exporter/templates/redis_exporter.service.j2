@@ -1,0 +1,12 @@
+[Unit]
+Description=Redis Exporter
+After=network-online.target
+
+[Service]
+User={{ redis_exporter_user }}
+Group={{ redis_exporter_user }}
+Type=simple
+ExecStart={{ redis_exporter_bin }}
+
+[Install]
+WantedBy=multi-user.target
