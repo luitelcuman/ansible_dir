@@ -1,6 +1,6 @@
 ---
 # handlers file for roles/mysqld-exporter
-- name: reload_daemon_and_restart_node_exporter
+- name: reload_daemon_and_restart_mysqld_exporter
   systemd:
     name: mysqld_exporter
     state: restarted

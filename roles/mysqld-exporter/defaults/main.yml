@@ -3,6 +3,6 @@
 
 mysqld_exporter_version: "0.15.0"
 mysqld_exporter_bin: /usr/local/bin/mysqld_exporter
-mysqld_exporter_user: mysqld-exporter
+mysqld_exporter_user: prometheus
 mysqld_exporter_group: "{{ mysqld_exporter_user }}"
 mysqld_exporter_dir_conf: /etc/mysqld_exporter
