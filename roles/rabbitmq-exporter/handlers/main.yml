@@ -1,2 +1,9 @@
 ---
 # handlers file for roles/rabbitmq-exporter
+
+- name: reload_daemon_and_restart_rabbitmq_exporter
+  systemd:
+    name: rabbitmq_exporter
+    state: restarted
+    daemon_reload: yes
+    enabled: yes
