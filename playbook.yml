@@ -7,8 +7,6 @@
     ansible_ssh_private_key_file: /home/suman/.ssh/id_rsa
   tags:
     - prometheus
-  roles:
-    - prometheus
 
 - name: install node-exporter
   hosts: others 
@@ -20,17 +18,6 @@
     - node-exporter
   roles:
     - node-exporter
-
-- name: install mysqld_exporter
-  hosts: mysqld
-  become: true
-  remote_user: root
-  vars:
-    ansible_ssh_private_key_file: /home/suman/.ssh/id_rsa
-  tags:
-    - mysqld-exporter
-  roles:
-    - mysqld-exporter
 
 - name: install rabbitmq-exporter
   hosts: rabbitmq
@@ -53,3 +40,14 @@
     - redis-exporter
   roles:
     - redis-exporter
+
+- name: install mysqld_exporter
+  hosts: mysqld
+  become: true
+  remote_user: root
+  vars:
+    ansible_ssh_private_key_file: /home/suman/.ssh/id_rsa
+  tags:
+    - mysqld-exporter
+  roles:
+    - mysqld-exporter
