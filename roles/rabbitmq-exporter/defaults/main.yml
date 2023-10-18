@@ -1,6 +1,6 @@
 ---
 # defaults file for roles/rabbitmq-exporter
-rabbitmq_exporter_version: "0.29.0"
+rabbitmq_exporter_version: "1.0.0-RC19"
 rabbitmq_exporter_bin: /usr/local/bin/rabbitmq_exporter
 rabbitmq_exporter_user: rabbitmq-exporter
 rabbitmq_exporter_group: "{{ rabbitmq_exporter_user }}"

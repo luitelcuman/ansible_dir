@@ -9,7 +9,7 @@
 - name: create mysqld exporter user 
   user:
     name: "{{ mysqld_exporter_user }}"
-    groups: "{{ mysqld_exporter_group }}"
+    group: "{{ mysqld_exporter_group }}"
     append: true
     shell: /usr/sbin/nologin
     system: true
@@ -45,6 +45,18 @@
     path: /tmp/mysqld_exporter-{{ mysqld_exporter_version }}.linux-amd64/ 
     state: absent
 
+- name: create mysql user
+  mysql_user:
+    name: exporter
+    password: password
+    host: localhost
+    priv: '*.*:ALL'
+
+- name: Set a MySQL server variable
+  mysql_variables:
+    name: max_connections
+    value: 3
+
 - name: configure mysqld exporter
   template:
     src: .mysqld_exporter.cnf.j2
@@ -59,17 +71,6 @@
     dest: /etc/systemd/system/mysqld_exporter.service
     mode: 0755
   notify: reload_daemon_and_restart_mysqld_exporter
-
-- name: create mysql user
-  mysql_user:
-    name: exporter
-    password: password
-    priv: '*.*:ALL'
-
-- name: Set a MySQL server variable
-  mysql_variables:
-    name: max_connections
-    value: 3
 
 - meta: flush_handlers
 
