@@ -30,7 +30,7 @@
 
 - name: move the binary to the final destination
   copy:
-    src: "/tmp/prometheus-{{ prometheus_version }}.linux-amd64/prometheus /promtool"
+    src: "/tmp/prometheus-{{ prometheus_version }}.linux-amd64/prometheus /tmp/prometheus-{{ prometheus_version }}.linux-amd64/prometool"
     dest: "{{ prometheus_bin }}"
     owner: "{{ prometheus_user }}"
     group: "{{ prometheus_user }}"
@@ -40,7 +40,7 @@
 
 - name: move console and concloe_libraries to the final destination
   copy:
-    src: "/tmp/prometheus-{{ prometheus_version }}.linux-amd64/consoles /console_libraries"
+    src: "/tmp/prometheus-{{ prometheus_version }}.linux-amd64/consoles /tmp/prometheus-{{ prometheus_version }}.linux-amd64/console_libraries"
     dest: "{{ prometheus_dir_conf }}"
     owner: "{{ prometheus_user }}"
     group: "{{ prometheus_user }}"

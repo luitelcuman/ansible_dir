@@ -50,7 +50,7 @@
     login_unix_socket: /var/run/mysqld/mysqld.sock
     name: exporter
     password: password
-    priv: "*.*:ALL"
+    priv: "test.*:ALL"
     host: localhost
     state: present
   tags: [ never, mysql_user ]
