@@ -1,2 +1,7 @@
 ---
 # defaults file for roles/prometheus
+prometheus_version: "2.32.1"
+prometheus_bin: /usr/local/bin/prometheus
+prometheus_user: prometheus
+prometheus_group: "{{ prometheus_user }}"
+prometheus_dir_conf: /etc/prometheus

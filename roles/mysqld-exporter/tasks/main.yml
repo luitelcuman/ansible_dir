@@ -47,22 +47,20 @@
 
 - name: create mysql user
   mysql_user:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
     name: exporter
     password: password
+    priv: "*.*:ALL"
     host: localhost
-    priv: '*.*:ALL'
-
-- name: Set a MySQL server variable
-  mysql_variables:
-    name: max_connections
-    value: 3
+    state: present
+  tags: [ never, mysql_user ]
 
 - name: configure mysqld exporter
   template:
     src: .mysqld_exporter.cnf.j2
     dest: /etc/.mysqld_exporter.cnf
     owner: root
-    groups: "{{ mysqld_exporter_group }}"
+    group: "{{ mysqld_exporter_group }}"
     mode: 0755
   
 - name: install service
