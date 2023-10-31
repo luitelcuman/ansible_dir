@@ -1,30 +1,28 @@
 ---
-- name: install mysqld_exporter
-  hosts: mysqld
+- name: install redis-exporter
+  hosts: redis
   become: true
   remote_user: root
   vars:
     ansible_ssh_private_key_file: /home/suman/.ssh/id_rsa
-    
   tags:
-    - mysqld-exporter
+   - redis-exporter
   roles:
-    - mysqld-exporter
+    - redis-exporter
 
-- name: Create Mysqld Dashboard
+- name: Create Redis Exporter Dashboard
   hosts: grafana
   become: true
   remote_user: root
   vars:
     ansible_ssh_private_key_file: /home/suman/.ssh/id_rsa
   tasks:
-    - name: Import Mysql Exporter Dashboard
-      community.grafana.grafana_dashboard:
+    - name: Import Redis Exporter Dashboard
+      grafana_dashboard:
         grafana_url: "http://192.168.100.245:3000"  # Grafana URL
         grafana_user: "admin"                       # Grafana username
         grafana_password: "devops123"               # Grafana password
         state: present                              # To create a new dashboard
         folder: my_project                          # Folder ID where the dashboard should be created
         overwrite: yes                              # Set to 'yes' to overwrite if dashboard exists
-        dashboard_url: "https://grafana.com/api/dashboards/14057/revisions/1/download"  # Url to dashboard JSON file
-    
+        dashboard_url: "https://grafana.com/api/dashboards/17507/revisions/1/download"  # Url to dashboard JSON file
