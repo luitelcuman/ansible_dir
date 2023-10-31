@@ -1,0 +1,28 @@
+---
+- name: install rabbitmq-exporter
+  hosts: rabbitmq
+  become: true
+  remote_user: root
+  vars:
+    ansible_ssh_private_key_file: /home/suman/.ssh/id_rsa
+  tags:
+    - rabbitmq-exporter
+  #roles:
+   # - rabbitmq-exporter
+
+- name: Create Rabbitmq Exporter Dashboard
+  hosts: grafana
+  become: true
+  remote_user: root
+  vars:
+    ansible_ssh_private_key_file: /home/suman/.ssh/id_rsa
+  tasks:
+    - name: Import Redis Exporter Dashboard
+      grafana_dashboard:
+        grafana_url: "http://192.168.100.245:3000"  # Grafana URL
+        grafana_user: "admin"                       # Grafana username
+        grafana_password: "devops123"               # Grafana password
+        state: present                              # To create a new dashboard
+        folder: my_project                          # Folder ID where the dashboard should be created
+        overwrite: yes                              # Set to 'yes' to overwrite if dashboard exists
+        dashboard_url: "https://grafana.com/api/dashboards/10991/revisions/12/download"  # Url to dashboard JSON file
