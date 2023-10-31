@@ -30,17 +30,37 @@
 
 - name: move the binary to the final destination
   copy:
-    src: "/tmp/prometheus-{{ prometheus_version }}.linux-amd64/prometheus /tmp/prometheus-{{ prometheus_version }}.linux-amd64/prometool"
-    dest: "{{ prometheus_bin }}"
+    src: "/tmp/prometheus-{{ prometheus_version }}.linux-amd64/prometheus"
+    dest: "{{ bin_path }}"
     owner: "{{ prometheus_user }}"
     group: "{{ prometheus_user }}"
     mode: 0755
     remote_src: yes
   when: __check_prometheus_present.stat.exists == false
 
-- name: move console and concloe_libraries to the final destination
+- name: move the binary to the final destination
   copy:
-    src: "/tmp/prometheus-{{ prometheus_version }}.linux-amd64/consoles /tmp/prometheus-{{ prometheus_version }}.linux-amd64/console_libraries"
+    src: "/tmp/prometheus-{{ prometheus_version }}.linux-amd64/promtool"
+    dest: "{{ bin_path }}"
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_user }}"
+    mode: 0755
+    remote_src: yes
+  when: __check_prometheus_present.stat.exists == false
+
+- name: move console to the final destination
+  copy:
+    src: "/tmp/prometheus-{{ prometheus_version }}.linux-amd64/consoles"
+    dest: "{{ prometheus_dir_conf }}"
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_user }}"
+    mode: 0755
+    remote_src: yes
+  when: __check_prometheus_present.stat.exists == false
+
+- name: move console_libraries to the final destination
+  copy:
+    src: "/tmp/prometheus-{{ prometheus_version }}.linux-amd64/console_libraries"
     dest: "{{ prometheus_dir_conf }}"
     owner: "{{ prometheus_user }}"
     group: "{{ prometheus_user }}"
@@ -51,11 +71,11 @@
 - name: move prometheus config file to the final destination
   copy:
     src: "/tmp/prometheus-{{ prometheus_version }}.linux-amd64/prometheus.yml"
-    dest: "{{ prometheus_dir_conf/prometheus.yml }}"
+    dest: "{{ prometheus_dir_conf }}/prometheus.yml"
     owner: "{{ prometheus_user }}"
     group: "{{ prometheus_user }}"
     mode: 0755
-    remote_src: yes
+    remote_src: yes 
   when: __check_prometheus_present.stat.exists == false  
   
 - name: clean 
