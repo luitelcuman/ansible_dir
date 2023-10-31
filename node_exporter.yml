@@ -1,0 +1,27 @@
+- name: install node-exporter
+  hosts: others 
+  become: true
+  remote_user: root
+  vars:
+    ansible_ssh_private_key_file: /home/suman/.ssh/id_rsa
+  tags:
+    - node-exporter
+  roles:
+    - node-exporter
+
+- name: Create Node Exporter Dashboard
+  hosts: grafana
+  become: true
+  remote_user: root
+  vars:
+    ansible_ssh_private_key_file: /home/suman/.ssh/id_rsa
+  tasks:
+    - name: Import Node Exporter Dashboard
+      grafana_dashboard:
+        grafana_url: "http://192.168.100.245:3000"  # Grafana URL
+        grafana_user: "admin"                       # Grafana username
+        grafana_password: "devops123"               # Grafana password
+        state: present                              # To create a new dashboard
+        folder: my_project                          # Folder ID where the dashboard should be created
+        overwrite: yes                              # Set to 'yes' to overwrite if dashboard exists
+        dashboard_url: "https://grafana.com/api/dashboards/1860/revisions/33/download"  # Url to dashboard JSON file
