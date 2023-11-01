@@ -3,10 +3,12 @@
   hosts: redis
   become: true
   remote_user: root
+  vars_files:
+    - vars/sshkey_vars.yml
   vars:
-    ansible_ssh_private_key_file: /home/suman/.ssh/id_rsa
+    ansible_ssh_private_key_file: "{{ privatekeypath }}"
   tags:
-   - redis-exporter
+    - redis-exporter
   roles:
     - redis-exporter
 
@@ -14,14 +16,17 @@
   hosts: grafana
   become: true
   remote_user: root
+  vars_files:
+    - vars/grafana_vars.yml
+    - vars/sshkey_vars.yml
   vars:
-    ansible_ssh_private_key_file: /home/suman/.ssh/id_rsa
+    ansible_ssh_private_key_file: "{{ privatekeypath }}"
   tasks:
     - name: Import Redis Exporter Dashboard
       grafana_dashboard:
-        grafana_url: "http://192.168.100.245:3000"  # Grafana URL
-        grafana_user: "admin"                       # Grafana username
-        grafana_password: "devops123"               # Grafana password
+        grafana_url: "{{ grafanaurl }}"  # Grafana URL
+        grafana_user: "{{ grafanauser }}"                       # Grafana username
+        grafana_password: "{{ grafanapassword }}"               # Grafana password
         state: present                              # To create a new dashboard
         folder: my_project                          # Folder ID where the dashboard should be created
         overwrite: yes                              # Set to 'yes' to overwrite if dashboard exists
