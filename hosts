@@ -1,0 +1,6 @@
+[servers]
+mysqld ansible_host=192.168.100.202 ansible_user=root
+node ansible_host=192.168.100.202 ansible_user=root
+redis ansible_host=192.168.100.202 ansible_user=root
+rabbitmq ansible_host=192.168.100.202 ansible_user=root
+grafana ansible_host=192.168.100.245 ansible_user=root
