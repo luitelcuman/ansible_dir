@@ -3,21 +3,43 @@
   become: true
   remote_user: root
   vars_files:
-    - sshkey_vars.yml
+    - vars/vars.yml
   vars:
     ansible_ssh_private_key_file: "{{ privatekeypath }}"
   tags:
     - node-exporter
-  roles:
-    - node-exporter
+  #roles:
+  #  - node-exporter
+
+- name: Add node_exporter targets to prometheus.yml
+  hosts: prometheus
+  become: true
+  remote_user: root
+  vars_files:
+    - vars/vars.yml
+  tasks:
+    - name: Ensure prometheus directory exists
+      file:
+        path: /etc/prometheus
+        state: directory
+
+    - name: Add node_exporter scrape configuration
+      blockinfile:
+        path: /etc/prometheus/prometheus.yml
+        marker: "# {mark} NODE_EXPORTER TARGET"
+        insertafter: EOF
+        block: >
+          - job_name: 'node_exporter'
+            static_configs:
+              - targets: ['{{ node_exporter_host }}:{{ node_exporter_port }}']
+      when: node_exporter_host is defined
 
 - name: Create Node Exporter Dashboard
   hosts: grafana
   become: true
   remote_user: root
   vars_files:
-    - vars/grafana_vars.yml
-    - sshkey_vars.yml
+    - vars/vars.yml
   vars:
     ansible_ssh_private_key_file: "{{ privatekeypath }}"
   tasks:
@@ -27,6 +49,6 @@
         grafana_user: "{{ grafanauser }}"                       # Grafana username
         grafana_password: "{{ grafanapassword }}"               # Grafana password
         state: present                              # To create a new dashboard
-        folder: my_project                          # Folder ID where the dashboard should be created
+        folder: "{{ dashboard_folder_name }}"                          # Folder ID where the dashboard should be created
         overwrite: yes                              # Set to 'yes' to overwrite if dashboard exists
         dashboard_url: "https://grafana.com/api/dashboards/1860/revisions/33/download"  # Url to dashboard JSON file

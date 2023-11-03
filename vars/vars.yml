@@ -1,0 +1,18 @@
+grafanauser: admin
+grafanapassword: devops123 
+grafanaurl: "http://192.168.100.245:3000"
+privatekeypath: "/home/suman/.ssh/id_rsa"
+dashboard_folder_name: project
+
+mysqld_exporter_host: "192.168.100.202"
+mysqld_exporter_port: "9104"
+
+node_exporter_host: "192.168.100.202"
+node_exporter_port: "9104"
+
+redis_exporter_host: "192.168.100.202"
+redis_exporter_port: "9104"
+
+rabbitmq_exporter_host: "192.168.100.202"
+rabbitmq_exporter_port: "9104"
+

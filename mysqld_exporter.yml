@@ -4,31 +4,62 @@
   become: true
   remote_user: root
   vars_files:
-    - sshkey_vars.yml
+    - vars/vars.yml
   vars:
     ansible_ssh_private_key_file: "{{ privatekeypath }}"
   tags:
     - mysqld-exporter
-  roles:
-    - mysqld-exporter
+  #roles:
+  # - mysqld-exporter
+
+- name: Add mysqld_exporter targets to prometheus.yml
+  hosts: prometheus
+  become: true
+  remote_user: root
+  vars_files:
+    - vars/vars.yml
+  tasks:
+    - name: Ensure prometheus directory exists
+      file:
+        path: /etc/prometheus
+        state: directory
+
+    - name: Add mysqld_exporter scrape configuration
+      blockinfile:
+        path: /etc/prometheus/prometheus.yml
+        marker: "# {mark} MYSQLD_EXPORTER TARGET"
+        insertafter: EOF
+        block: >
+            - job_name: 'mysqld_exporter'
+              static_configs:
+                - targets: ['{{ mysqld_exporter_host }}:{{ mysqld_exporter_port }}']
+      when: mysqld_exporter_host is defined
+      
+    - name: reload_daemon_and_restart_prometheus
+      systemd:
+        name: prometheus
+        state: restarted
+        daemon_reload: yes
+        enabled: yes
 
 - name: Create Mysqld Dashboard
   hosts: grafana
   become: true
   remote_user: root
   vars_files:
-    - vars/grafana_vars.yml
-    - sshkey_vars.yml 
+    - vars/vars.yml
   vars:
     ansible_ssh_private_key_file: "{{ privatekeypath }}"
   tasks:
     - name: Import Mysql Exporter Dashboard
-      community.grafana.grafana_dashboard:
-        grafana_url: "{{ grafanaurl }}"  # Grafana URL
-        grafana_user: "{{ grafanauser }}"                       # Grafana username
-        grafana_password: "{{ grafanapassword }}"               # Grafana password
-        state: present                              # To create a new dashboard
-        folder: my_project                          # Folder ID where the dashboard should be created
-        overwrite: yes                              # Set to 'yes' to overwrite if dashboard exists
-        dashboard_url: "https://grafana.com/api/dashboards/14057/revisions/1/download"  # Url to dashboard JSON file
+      grafana_dashboard:
+        grafana_url: "{{ grafanaurl }}"  
+        grafana_user: "{{ grafanauser }}"                       
+        grafana_password: "{{ grafanapassword }}"               
+        state: present                              
+        folder: "{{ dashboard_folder_name }}"                      
+        overwrite: yes                              
+        slug: "Mysql-Dashboard"
+        dashboard_url: "https://grafana.com/api/dashboards/14057/revisions/1/download"  
+        #dashboard_url: "{{ lookup('file', 'd.json') }}"
     

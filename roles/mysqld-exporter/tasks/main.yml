@@ -77,3 +77,4 @@
     name: mysqld_exporter
     state: started
     enabled: yes
+
