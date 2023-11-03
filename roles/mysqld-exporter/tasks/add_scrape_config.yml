@@ -1,0 +1,19 @@
+---
+
+  - name: Ensure prometheus directory exists
+    file:
+      path: /etc/prometheus
+      state: directory
+
+  - name: Add mysqld_exporter scrape configuration
+
+    blockinfile:
+      path: /etc/prometheus/prometheus.yml
+      marker: "# {mark} MYSQLD_EXPORTER TARGET"
+      insertafter: EOF
+      block: >
+          - job_name: 'mysqld_exporter'
+            static_configs:
+              - targets: ['{{ mysqld_exporter_host }}:{{ mysqld_exporter_port }}']
+    when: mysqld_exporter_host is defined
+    notify: reload_daemon_and_restart_mysqld_exporter

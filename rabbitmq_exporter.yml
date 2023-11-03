@@ -7,8 +7,6 @@
     - vars/vars.yml
   vars:
     ansible_ssh_private_key_file: "{{ privatekeypath }}"
-  tags:
-    - rabbitmq-exporter
   #roles:
   #- rabbitmq-exporter
 

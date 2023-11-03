@@ -1,2 +1,4 @@
 ---
 # vars file for roles/rabbitmq-exporter
+rabbitmq_exporter_host: "192.168.100.202"
+rabbitmq_exporter_port: "9104"

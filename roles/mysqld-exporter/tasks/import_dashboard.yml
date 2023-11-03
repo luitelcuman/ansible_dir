@@ -1,0 +1,12 @@
+---
+  - name: Import Mysql Exporter Dashboard
+    grafana_dashboard:
+      grafana_url: "{{ grafanaurl }}"  
+      grafana_user: "{{ grafanauser }}"                       
+      grafana_password: "{{ grafanapassword }}"               
+      state: present                              
+      folder: "{{ dashboard_folder_name }}"                      
+      overwrite: yes                              
+      slug: "Mysql-Dashboard"
+      dashboard_url: "https://grafana.com/api/dashboards/14057/revisions/1/download"  
+      #dashboard_url: "{{ lookup('file', 'd.json') }}"

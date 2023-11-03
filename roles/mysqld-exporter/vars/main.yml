@@ -1,2 +1,4 @@
 ---
 # vars file for roles/mysqld-exporter
+mysqld_exporter_host: "192.168.100.202"
+mysqld_exporter_port: "9104"
