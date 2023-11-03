@@ -8,9 +8,9 @@ This Ansible playbooks automates the setup of monitoring for various services us
 
 - Ansible: Ensure that you have Ansible installed on your control machine.
 
-- Prometheus: Set up Prometheus on a target server. Ensure that the Prometheus server is accessible and configured in your inventory.
+- Prometheus: Set up Prometheus on a target server. Ensure that the Prometheus server is accessible and configured in your hosts.
 
-- Grafana: Install Grafana on a target server. Make sure that Grafana is accessible and configured in your inventory.
+- Grafana: Install Grafana on a target server. Make sure that Grafana is accessible and configured in your hosts.
 
 ## Usage
 
