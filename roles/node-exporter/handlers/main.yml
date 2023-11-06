@@ -1,8 +1,9 @@
 ---
-# handlers file for roles/node-exporter
-- name: reload_daemon_and_restart_node_exporter
+# handlers file for roles/mysqld-exporter
+- name: reload_daemon_and_restart_prometheus
+  delegate_to: prometheus
   systemd:
-    name: node_exporter
+    name: prometheus
     state: restarted
     daemon_reload: yes
     enabled: yes

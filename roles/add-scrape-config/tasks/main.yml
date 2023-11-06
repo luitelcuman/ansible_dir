@@ -13,10 +13,9 @@
       path: /etc/prometheus/prometheus.yml
       marker: "# {mark} MYSQLD_EXPORTER TARGET"
       insertafter: EOF
-      block: >
+      block: |2
           - job_name: 'mysqld_exporter'
             static_configs:
               - targets: ['{{ exporter_host }}:{{ exporter_port }}']
-    when: mysqld_exporter_host is defined
-    notify: reload_daemon_and_restart_mysqld_exporter 
+    notify: reload_daemon_and_restart_prometheus
     tags: [never, prometheus]
