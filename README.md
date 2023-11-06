@@ -53,13 +53,13 @@ This Ansible playbooks automates the setup of monitoring for various services us
 
 ## Customization
 
-You can customize the exporter configurations by editing the appropriate variables in the variable files. For example, customize every configuration in `roles/vars/vars.yml`.
+You can customize the exporter configurations by editing the appropriate variables in the variable files. For example, customize mysqld_exporter configuration in `roles/vars/mysqld_vars.yml`.
 
 ## Grafana Dashboards
 
 Grafana dashboards for exporter are automatically created after the specific playbook runs . You can access the Grafana web interface to view and manage these dashboards.
 
-- Grafana URL: [Your Grafana URL]
+- Grafana URL: [192.168.100.245:3000]
 
 ## Contributing
 
