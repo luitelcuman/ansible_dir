@@ -1,55 +1,13 @@
 ---
-- name: install redis-exporter
+- name: installation & Configuration Of Redis-Exporter 
   hosts: redis
   become: true
+  gather_facts: false
   remote_user: root
   vars_files:
-    - vars/vars.yml
-  vars:
-    ansible_ssh_private_key_file: "{{ privatekeypath }}"
-  tags:
-    - redis-exporter
-  #roles:
-  # - redis-exporter
-
-- name: Add redis_exporter targets to prometheus.yml
-  hosts: prometheus
-  become: true
-  remote_user: root
-  vars_files:
-    - vars/vars.yml
-  tasks:
-    - name: Ensure prometheus directory exists
-      file:
-        path: /etc/prometheus
-        state: directory
-
-    - name: Add redis_exporter scrape configuration
-      blockinfile:
-        path: /etc/prometheus/prometheus.yml
-        marker: "# {mark} REDIS_EXPORTER TARGET"
-        insertafter: EOF
-        block: >
-          - job_name: 'redis_exporter'
-            static_configs:
-              - targets: ['{{ redis_exporter_host }}:{{ redis_exporter_port }}']
-      when: redis_exporter_host is defined
-
-- name: Create Redis Exporter Dashboard
-  hosts: grafana
-  become: true
-  remote_user: root
-  vars_files:
-    - vars/vars.yml
-  vars:
-    ansible_ssh_private_key_file: "{{ privatekeypath }}"
-  tasks:
-    - name: Import Redis Exporter Dashboard
-      grafana_dashboard:
-        grafana_url: "{{ grafanaurl }}"  # Grafana URL
-        grafana_user: "{{ grafanauser }}"                       # Grafana username
-        grafana_password: "{{ grafanapassword }}"               # Grafana password
-        state: present                              # To create a new dashboard
-        folder: "{{ dashboard_folder_name }}"                          # Folder ID where the dashboard should be created
-        overwrite: yes                              # Set to 'yes' to overwrite if dashboard exists
-        dashboard_url: "https://grafana.com/api/dashboards/17507/revisions/1/download"  # Url to dashboard JSON file
+    - vars/redis_vars.yml
+    - vars/grafana_vars.yml
+  roles:
+   - redis-exporter
+   - add-scrape-config
+   - import-grafana-dashboard

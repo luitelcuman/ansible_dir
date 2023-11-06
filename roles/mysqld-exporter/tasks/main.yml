@@ -1,17 +1,3 @@
 ---
 # tasks file for roles/mysqld-exporter
-
-- name: Install and configure mysqld_exporter
-  include: install_and_configure.yml
-  delegate_to: mysqld 
-
-- name: Add mysqld_exporter targets to prometheus.yml
-  include: add_scrape_config.yml
-  delegate_to: prometheus
-
-- name: Create Mysqld Dashboard
-  include: import_dashboard.yml
-  delegate_to: grafana 
-
-
-
+- include: install_and_config.yml

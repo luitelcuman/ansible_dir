@@ -1,10 +1,13 @@
 ---
 - name: check if mysqld exporter exist 
+  delegate_to: mysqld
   stat: 
     path: "{{ mysqld_exporter_bin }}"
   register: __check_mysqld_exporter_present
+  tags: [never, mysqld]
 
 - name: create mysqld exporter user 
+  delegate_to: mysqld
   user:
     name: "{{ mysqld_exporter_user }}"
     group: "{{ mysqld_exporter_group }}"
@@ -12,23 +15,29 @@
     shell: /usr/sbin/nologin
     system: true
     create_home: false
+  tags: [never, mysqld]
 
-- name: create mysqld exporter config directory 
+- name: create mysqld exporter config directory
+  delegate_to: mysqld
   file:
     path: "{{ mysqld_exporter_dir_conf }}"
     state: directory
     owner: "{{ mysqld_exporter_user }}"
     group: "{{ mysqld_exporter_group }}"
+  tags: [never, mysqld]
 
 - name: download and unzip mysqld exporter if not exist
+  delegate_to: mysqld
   unarchive:
     src: "https://github.com/prometheus/mysqld_exporter/releases/download/v{{ mysqld_exporter_version }}/mysqld_exporter-{{ mysqld_exporter_version }}.linux-amd64.tar.gz"
     dest: /tmp/
     remote_src: yes
     validate_certs: no
   when: __check_mysqld_exporter_present.stat.exists == false
+  tags: [never, mysqld]
 
 - name: move the binary to the final destination
+  delegate_to: mysqld
   copy:
     src: "/tmp/mysqld_exporter-{{ mysqld_exporter_version }}.linux-amd64/mysqld_exporter"
     dest: "{{ mysqld_exporter_bin }}"
@@ -37,13 +46,17 @@
     mode: 0755
     remote_src: yes
   when: __check_mysqld_exporter_present.stat.exists == false
+  tags: [never, mysqld]
 
 - name: clean 
+  delegate_to: mysqld
   file:
     path: /tmp/mysqld_exporter-{{ mysqld_exporter_version }}.linux-amd64/ 
     state: absent
+  tags: [never, mysqld]
 
 - name: create mysql user
+  delegate_to: mysqld
   mysql_user:
     login_unix_socket: /var/run/mysqld/mysqld.sock
     name: exporter
@@ -51,21 +64,26 @@
     priv: "*.*:PROCESS,REPLICATION CLIENT,SELECT"
     host: localhost
     state: present
-  tags: [ never, mysql_user ]
+  tags: [ never, mysqld ]
 
 - name: configure mysqld exporter
+  delegate_to: mysqld
   template:
     src: .mysqld_exporter.cnf.j2
     dest: /etc/.mysqld_exporter.cnf
     owner: root
     group: "{{ mysqld_exporter_group }}"
     mode: 0755
-  
+  tags: [never, mysqld]
+
 - name: install service
+  delegate_to: mysqld
   template: 
     src: mysqld_exporter.service.j2
     dest: /etc/systemd/system/mysqld_exporter.service
     mode: 0755
   notify: reload_daemon_and_restart_mysqld_exporter
+  tags: [never, mysqld]
 
 - meta: flush_handlers
+  tags: [never, mysqld]

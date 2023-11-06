@@ -1,5 +1,6 @@
+# Credintials for grafana  
+
 grafanauser: admin
 grafanapassword: devops123 
 grafanaurl: "http://192.168.100.245:3000"
-privatekeypath: "/home/suman/.ssh/id_rsa"
-dashboard_folder_name: project
+

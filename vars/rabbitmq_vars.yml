@@ -1,0 +1,9 @@
+
+# details for node-exporter block scrape config
+exporter_host: "192.168.100.202"
+exporter_port: "9419"
+
+# Dashboard Information
+dashboard_folder_name: project
+dashboard_name: "Rabbitmq-Exporter Dashboard"
+dashboard_url_address: "https://grafana.com/api/dashboards/10991/revisions/12/download"

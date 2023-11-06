@@ -1,0 +1,65 @@
+---
+# tasks file for roles/rabbitmq-exporter
+
+- name: check if rabbitmq exporter exporter exist
+  stat:
+    path: "{{ rabbitmq_exporter_bin }}"
+  register: __check_rabbitmq_exporter_present
+  tags: [never, rabbitmq] 
+
+- name: create rabbitmq user user
+  user:
+    name: "{{ rabbitmq_exporter_user }}"
+    append: true
+    shell: /usr/sbin/nologin
+    system: true
+    create_home: false
+  tags: [never, rabbitmq]
+
+- name: create node exporter config directory 
+  file:
+    path: "{{ rabbitmq_exporter_dir_conf }}"
+    state: directory
+    owner: "{{ rabbitmq_exporter_user }}"
+    group: "{{ rabbitmq_exporter_user }}"
+  tags: [never, rabbitmq]
+
+- name: download and unzip node exporter if not exist
+  unarchive:
+    src: "https://github.com/kbudde/rabbitmq_exporter/releases/download/v1.0.0-RC19/rabbitmq_exporter_1.0.0-RC19_linux_amd64.tar.gz"
+    dest: /tmp/
+    remote_src: yes
+    validate_certs: no
+  when: __check_rabbitmq_exporter_present.stat.exists == false
+  tags: [never, rabbitmq]
+
+- name: move the binary to the final destination
+  copy:
+    src: "/tmp/rabbitmq_exporter"
+    dest: "{{ rabbitmq_exporter_bin }}"
+    owner: "{{ rabbitmq_exporter_user }}"
+    group: "{{ rabbitmq_exporter_user }}"
+    mode: 0755
+    remote_src: yes
+  when: __check_rabbitmq_exporter_present.stat.exists == false
+  tags: [never, rabbitmq]
+  
+- name: clean 
+  file:
+    path: /tmp/rabbitmq_exporter-{{ rabbitmq_exporter_version }}.linux-amd64/ 
+    state: absent
+  tags: [never, rabbitmq]
+
+- name: install service
+  template: 
+    src: rabbitmq_exporter.service.j2
+    dest: /etc/systemd/system/rabbitmq_exporter.service
+    owner: root  
+    group: root 
+    mode: 0755
+  notify: reload_daemon_and_restart_rabbitmq_exporter
+  tags: [never, rabbitmq]
+
+- meta: flush_handlers
+  tags: [never, rabbitmq]
+

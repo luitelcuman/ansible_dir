@@ -1,0 +1,64 @@
+---
+# tasks file for roles/redis-exporter
+
+- name: check if redis exporter exist
+  stat:
+    path: "{{ redis_exporter_bin }}"
+  register: __check_redis_exporter_present
+  tags: [never, redis]
+- name: create prometheus user user
+  user:
+    name: "{{ redis_exporter_user }}"
+    append: true
+    shell: /usr/sbin/nologin
+    system: true
+    create_home: false
+  tags: [never, redis]
+
+- name: create redis exporter config directory 
+  file:
+    path: "{{ redis_exporter_dir_conf }}"
+    state: directory
+    owner: "{{ redis_exporter_user }}"
+    group: "{{ redis_exporter_user }}"
+  tags: [never, redis]
+
+- name: download and unzip redis exporter if not exist
+  unarchive:
+    src: "https://github.com/oliver006/redis_exporter/releases/download/v{{ redis_exporter_version }}/redis_exporter-v{{ redis_exporter_version }}.linux-amd64.tar.gz"
+    dest: /tmp/
+    remote_src: yes
+    validate_certs: no
+  when: __check_redis_exporter_present.stat.exists == false
+  tags: [never, redis]
+
+- name: move the binary to the final destination
+  copy:
+    src: "/tmp/redis_exporter-v{{ redis_exporter_version }}.linux-amd64/redis_exporter"
+    dest: "{{ redis_exporter_bin }}"
+    owner: "{{ redis_exporter_user }}"
+    group: "{{ redis_exporter_user }}"
+    mode: 0755
+    remote_src: yes
+  when: __check_redis_exporter_present.stat.exists == false
+  tags: [never, redis]
+
+- name: clean 
+  file:
+    path: /tmp/redis_exporter-v{{ redis_exporter_version }}.linux-amd64/ 
+    state: absent
+  tags: [never, redis]
+
+- name: install service
+  template: 
+    src: redis_exporter.service.j2
+    dest: /etc/systemd/system/redis_exporter.service
+    owner: root  
+    group: "{{ redis_exporter_user }}"
+    mode: 0755
+  notify: reload_daemon_and_restart_redis_exporter
+  tags: [never, redis]
+
+- meta: flush_handlers
+  tags: [never, redis]
+

@@ -1,6 +1,5 @@
 ---
 # handlers file for roles/node-exporter
-
 - name: reload_daemon_and_restart_node_exporter
   systemd:
     name: node_exporter

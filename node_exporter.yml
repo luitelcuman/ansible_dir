@@ -1,52 +1,13 @@
-- name: install node-exporter
-  hosts: node 
+---
+- name: Installation & Configuration Of Node-Exporter 
+  hosts: node
   become: true
+  gather_facts: false
   remote_user: root
   vars_files:
-    - vars/vars.yml
-  vars:
-    ansible_ssh_private_key_file: "{{ privatekeypath }}"
-  #roles:
-  #  - node-exporter
-
-- name: Add node_exporter targets to prometheus.yml
-  hosts: prometheus
-  become: true
-  remote_user: root
-  vars_files:
-    - vars/vars.yml
-  tasks:
-    - name: Ensure prometheus directory exists
-      file:
-        path: /etc/prometheus
-        state: directory
-
-    - name: Add node_exporter scrape configuration
-      blockinfile:
-        path: /etc/prometheus/prometheus.yml
-        marker: "# {mark} NODE_EXPORTER TARGET"
-        insertafter: EOF
-        block: >
-          - job_name: 'node_exporter'
-            static_configs:
-              - targets: ['{{ node_exporter_host }}:{{ node_exporter_port }}']
-      when: node_exporter_host is defined
-
-- name: Create Node Exporter Dashboard
-  hosts: grafana
-  become: true
-  remote_user: root
-  vars_files:
-    - vars/vars.yml
-  vars:
-    ansible_ssh_private_key_file: "{{ privatekeypath }}"
-  tasks:
-    - name: Import Node Exporter Dashboard
-      grafana_dashboard:
-        grafana_url: "{{ grafanaurl }}"  # Grafana URL
-        grafana_user: "{{ grafanauser }}"                       # Grafana username
-        grafana_password: "{{ grafanapassword }}"               # Grafana password
-        state: present                              # To create a new dashboard
-        folder: "{{ dashboard_folder_name }}"                          # Folder ID where the dashboard should be created
-        overwrite: yes                              # Set to 'yes' to overwrite if dashboard exists
-        dashboard_url: "https://grafana.com/api/dashboards/1860/revisions/33/download"  # Url to dashboard JSON file
+    - vars/node_vars.yml
+    - vars/grafana_vars.yml
+  roles:
+   - node-exporter
+   - add-scrape-config
+   - import-grafana-dashboard

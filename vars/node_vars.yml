@@ -1,0 +1,9 @@
+
+# details for node-exporter block scrape config
+exporter_host: "192.168.100.202"
+exporter_port: "9100"
+
+# Dashboard Information
+dashboard_folder_name: project
+dashboard_name: "Node-Exporter ashboard"
+dashboard_url_address: "https://grafana.com/api/dashboards/1860/revisions/33/download"

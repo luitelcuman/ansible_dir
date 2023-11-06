@@ -1,4 +1,2 @@
 ---
 # vars file for roles/node-exporter
-node_exporter_host: "192.168.100.202"
-node_exporter_port: "9104"

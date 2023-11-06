@@ -1,12 +1,14 @@
 ---
-
+# tasks file for roles/add-scrape-config
   - name: Ensure prometheus directory exists
+    delegate_to: prometheus
     file:
       path: /etc/prometheus
-      state: directory
+      state: directory 
+    tags: [never, prometheus]
 
-  - name: Add mysqld_exporter scrape configuration
-
+  - name: Add scrape configuration
+    delegate_to: prometheus
     blockinfile:
       path: /etc/prometheus/prometheus.yml
       marker: "# {mark} MYSQLD_EXPORTER TARGET"
@@ -14,6 +16,7 @@
       block: >
           - job_name: 'mysqld_exporter'
             static_configs:
-              - targets: ['{{ mysqld_exporter_host }}:{{ mysqld_exporter_port }}']
+              - targets: ['{{ exporter_host }}:{{ exporter_port }}']
     when: mysqld_exporter_host is defined
-    notify: reload_daemon_and_restart_mysqld_exporter
+    notify: reload_daemon_and_restart_mysqld_exporter 
+    tags: [never, prometheus]
