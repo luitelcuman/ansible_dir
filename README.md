@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This Ansible playbooks automates the setup of monitoring for various services using Prometheus and Grafana. The playbook includes roles for `node_exporter`, `mysqld_exporter`, `rabbitmq_exporter`, and `redis_exporter`. It also configures scrape targets in Prometheus and creates Grafana dashboards for each exporter.
+This Ansible playbooks automates the setup of monitoring for various services using Prometheus and Grafana. The playbook includes roles for `node_exporter`, `mysqld_exporter`, `rabbitmq_exporter`, and `redis_exporter`. It also other two roles `add-scrape-config` configures scrape targets in Prometheus and `import-grafana-dashboard` creates Grafana dashboards for each exporter.
 
 ## Requirements
 
@@ -23,15 +23,18 @@ This Ansible playbooks automates the setup of monitoring for various services us
 
 3. Modify the playbook variables and configurations as needed. Customize the exporter configurations in the variable files located in the `roles/vars` directory.
 
-4. Run the playbook using the following command:
+4. Run the playbook using the following command with specific tags:
 
-`ansible-playbook mysqld_exporter.yml` // To install mysqld_exporter 
-`ansible-playbook node_exporter.yml` // To install node_exporter
-`ansible-playbook redis_exporter.yml` // To install redis_exporter
-`ansible-playbook rabbitmq_exporter.yml` // To install rabbitmq_exporter
+`ansible-playbook mysqld_exporter.yml --tags mysqld` // To install mysqld_exporter 
+`ansible-playbook node_exporter.yml --tags node` // To install node_exporter
+`ansible-playbook redis_exporter.yml --tags redis` // To install redis_exporter
+`ansible-playbook rabbitmq_exporter.yml --tags rabbitmq` // To install rabbitmq_exporter
 
+5. Use following tags:
+    `prometheus`: to config `prometheus.yml` for specific exporter
+    `grafana` : to create grafana dashboard for sepecific exporter
 
-5. The playbooks will apply the roles to the specified hosts, install and configure the Prometheus exporters, add scrape targets to the Prometheus configuration, and create Grafana dashboards.
+6. The playbooks will apply the roles to the specified hosts, install and configure the Prometheus exporters, add scrape targets to the Prometheus configuration, and create Grafana dashboards.
 
 ## Roles
 
