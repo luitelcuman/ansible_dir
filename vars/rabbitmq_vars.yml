@@ -2,6 +2,7 @@
 # details for node-exporter block scrape config
 exporter_host: "192.168.100.202"
 exporter_port: "9419"
+job_name: "RABBITMQ-EXPORTER"
 
 # Dashboard Information
 dashboard_folder_name: project

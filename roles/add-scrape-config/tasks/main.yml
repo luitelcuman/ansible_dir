@@ -11,11 +11,13 @@
     delegate_to: prometheus
     blockinfile:
       path: /etc/prometheus/prometheus.yml
-      marker: "# {mark} MYSQLD_EXPORTER TARGET"
+      marker: "# {mark} {{ job_name }} TARGET"
       insertafter: EOF
       block: |2
-          - job_name: 'mysqld_exporter'
+          - job_name: '"{{ job_name }}"'
             static_configs:
               - targets: ['{{ exporter_host }}:{{ exporter_port }}']
-    notify: reload_daemon_and_restart_prometheus
     tags: [never, prometheus]
+    notify: reload_daemon_and_restart_prometheus
+
+    

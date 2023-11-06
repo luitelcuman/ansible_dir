@@ -2,6 +2,7 @@
 # details for mysqld-exporter block scrape config
 exporter_host: "192.168.100.202"
 exporter_port: "9104"
+job_name: "MYSQLD-EXPORTER"
 
 # Dashboard Information
 dashboard_folder_name: project
