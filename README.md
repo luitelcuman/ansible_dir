@@ -30,7 +30,7 @@ This Ansible playbooks automates the setup of monitoring for various services us
 `ansible-playbook redis_exporter.yml --tags redis` // To install redis_exporter  
 `ansible-playbook rabbitmq_exporter.yml --tags rabbitmq` // To install rabbitmq_exporter  
 
-5. Use following tags:
+5. Use following tags:  
     `prometheus`: to config `prometheus.yml` for specific exporter  
     `grafana` : to create grafana dashboard for sepecific exporter  
 
